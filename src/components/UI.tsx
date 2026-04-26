@@ -30,58 +30,17 @@ export const RetroBox: React.FC<{ children: React.ReactNode; className?: string;
   </div>
 );
 
-// ── CharacterSprite (animated: blink + lip-sync) ─────────────
+// ── CharacterSprite (single image, no frame animation) ──────
 export const CharacterSprite = React.forwardRef<
   { startTalking: () => void; stopTalking: () => void },
   { mentor: Mentor; className?: string; isTalking?: boolean; isStatic?: boolean }
->(({ mentor, className = '', isTalking = false, isStatic = false }, ref) => {
-  const [frame, setFrame] = React.useState(0);
-  const blinkRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-  const talkRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const sprites = mentor.sprites?.length >= 3
-    ? mentor.sprites
-    : [mentor.avatar, mentor.avatar, mentor.avatar];
-
-  // Blink system (frame 1 = eyes closed)
-  React.useEffect(() => {
-    if (isStatic) return;
-    const scheduleBlink = () => {
-      const delay = 2500 + Math.random() * 4000;
-      blinkRef.current = setTimeout(() => {
-        if (!isTalking) {
-          setFrame(1);
-          setTimeout(() => setFrame(0), 110);
-        }
-        scheduleBlink();
-      }, delay);
-    };
-    scheduleBlink();
-    return () => { if (blinkRef.current) clearTimeout(blinkRef.current); };
-  }, [isTalking, isStatic]);
-
-  // Talking system (frame 2 = mouth open, alternates with frame 0)
-  React.useEffect(() => {
-    if (isStatic) { setFrame(0); return; }
-    if (talkRef.current) clearTimeout(talkRef.current);
-    if (!isTalking) { setFrame(0); return; }
-    let open = false;
-    const animateTalk = () => {
-      open = !open;
-      setFrame(open ? 2 : 0);
-      talkRef.current = setTimeout(animateTalk, 70 + Math.random() * 90);
-    };
-    animateTalk();
-    return () => { if (talkRef.current) clearTimeout(talkRef.current); };
-  }, [isTalking, isStatic]);
-
+>(({ mentor, className = '' }, _ref) => {
   return (
     <div className={`relative flex items-end justify-center ${className}`}>
-      <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none z-10 rounded-b" />
       <img
-        src={sprites[frame]}
+        src={mentor.avatar}
         alt={mentor.name}
-        className={`pixel-render w-full h-full object-contain object-bottom select-none ${isStatic ? '' : 'animate-breathe'}`}
+        className="pixel-render animate-breathe w-full h-full object-contain object-bottom select-none"
         draggable={false}
       />
     </div>

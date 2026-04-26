@@ -33,8 +33,8 @@ export const RetroBox: React.FC<{ children: React.ReactNode; className?: string;
 // ── CharacterSprite (animated: blink + lip-sync) ─────────────
 export const CharacterSprite = React.forwardRef<
   { startTalking: () => void; stopTalking: () => void },
-  { mentor: Mentor; className?: string; isTalking?: boolean }
->(({ mentor, className = '', isTalking = false }, ref) => {
+  { mentor: Mentor; className?: string; isTalking?: boolean; isStatic?: boolean }
+>(({ mentor, className = '', isTalking = false, isStatic = false }, ref) => {
   const [frame, setFrame] = React.useState(0);
   const blinkRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const talkRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -45,6 +45,7 @@ export const CharacterSprite = React.forwardRef<
 
   // Blink system (frame 1 = eyes closed)
   React.useEffect(() => {
+    if (isStatic) return;
     const scheduleBlink = () => {
       const delay = 2500 + Math.random() * 4000;
       blinkRef.current = setTimeout(() => {
@@ -57,10 +58,11 @@ export const CharacterSprite = React.forwardRef<
     };
     scheduleBlink();
     return () => { if (blinkRef.current) clearTimeout(blinkRef.current); };
-  }, [isTalking]);
+  }, [isTalking, isStatic]);
 
   // Talking system (frame 2 = mouth open, alternates with frame 0)
   React.useEffect(() => {
+    if (isStatic) { setFrame(0); return; }
     if (talkRef.current) clearTimeout(talkRef.current);
     if (!isTalking) { setFrame(0); return; }
     let open = false;
@@ -71,7 +73,7 @@ export const CharacterSprite = React.forwardRef<
     };
     animateTalk();
     return () => { if (talkRef.current) clearTimeout(talkRef.current); };
-  }, [isTalking]);
+  }, [isTalking, isStatic]);
 
   return (
     <div className={`relative flex items-end justify-center ${className}`}>
@@ -79,7 +81,7 @@ export const CharacterSprite = React.forwardRef<
       <img
         src={sprites[frame]}
         alt={mentor.name}
-        className="pixel-render animate-breathe w-full h-full object-contain object-bottom select-none"
+        className={`pixel-render w-full h-full object-contain object-bottom select-none ${isStatic ? '' : 'animate-breathe'}`}
         draggable={false}
       />
     </div>

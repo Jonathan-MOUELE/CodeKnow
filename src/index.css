@@ -177,6 +177,13 @@
 .animate-glitch { animation: glitch-clip 0.4s steps(1) infinite; }
 .animate-text-flicker { animation: text-flicker 4s ease infinite; }
 .animate-gradient { background-size: 200% 200%; animation: gradient-shift 6s ease infinite; }
+.animate-spin-slow { animation: spin 20s linear infinite; }
+.animate-reverse-spin-slow { animation: reverse-spin 25s linear infinite; }
+
+@keyframes reverse-spin {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
 
 /* Quest difficulty colors */
 .diff-novice { color: #22c55e; border-color: #22c55e; }

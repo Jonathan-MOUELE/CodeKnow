@@ -148,57 +148,82 @@ function ModuleSelect({ onSelect }: { onSelect: (m: Module) => void }) {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {MODULES.map((mod, i) => {
+            const modMentors = MENTORS.filter(m => mod.mentorIds.includes(m.id));
+            const mainMentor = modMentors[0];
             const modQuests = INITIAL_QUESTS.filter(q => mod.mentorIds.includes(q.mentorId));
             const done = modQuests.filter(q => userData?.completedQuestIds?.includes(q.id)).length;
-            const modMentors = MENTORS.filter(m => mod.mentorIds.includes(m.id));
+            
             return (
-              <motion.div key={mod.id} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }}
-                whileHover={{ y: -8 }} onClick={() => onSelect(mod)} className="module-card cursor-pointer group">
-                <div className={`absolute inset-0 bg-gradient-to-br ${mod.gradient}`} />
-                <div className="absolute inset-0 border border-white/0 group-hover:border-white/20 transition-colors" style={{ borderColor: mod.color + '22' }} />
-                {/* Colored accent top */}
-                <div className="absolute top-0 left-0 right-0 h-1" style={{ background: `linear-gradient(90deg, ${mod.color}, transparent)` }} />
+              <motion.div key={mod.id}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.8 }}
+                whileHover={{ y: -10 }}
+                onClick={() => onSelect(mod)}
+                className="group relative h-[450px] cursor-pointer overflow-hidden border border-white/5 bg-black/40 backdrop-blur-xl"
+                style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%)' }}>
+                
+                {/* Immersive Mentor Background */}
+                <div className="absolute right-0 top-0 h-full w-3/4 pointer-events-none opacity-40 group-hover:opacity-100 transition-all duration-1000 transform translate-x-12 group-hover:translate-x-0 scale-110 group-hover:scale-100">
+                  <CharacterSprite mentor={mainMentor} isTalking={false} className="w-full h-full object-contain object-right-bottom pixel-render" />
+                  <div className="absolute inset-0 bg-gradient-to-l from-transparent via-black/30 to-black/90" />
+                </div>
 
-                <div className="relative z-10 p-8">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="p-3 border" style={{ color: mod.color, borderColor: mod.color + '44', background: mod.color + '11' }}>
-                      <ModuleIcon name={mod.icon} size={28} />
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[9px] text-white/30 font-mono uppercase">{language === 'fr' ? 'QUÊTES' : 'QUESTS'}</div>
-                      <div className="font-display font-bold text-lg" style={{ color: mod.color }}>
-                        {done}/{modQuests.length}
+                {/* Content */}
+                <div className="relative h-full p-8 flex flex-col justify-between z-10">
+                  <div>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="p-3 border" style={{ color: mod.color, borderColor: mod.color + '44' }}>
+                        <ModuleIcon name={mod.icon} size={28} />
                       </div>
+                      <div className="h-px w-10 bg-white/10" />
+                      <div className="text-[10px] font-mono text-white/30 uppercase tracking-[0.4em]">MODULE_0{i+1}</div>
                     </div>
-                  </div>
-                  {/* Progress bar */}
-                  <div className="h-1 bg-white/5 mb-6 overflow-hidden">
-                    <div className="h-full transition-all duration-1000" style={{ width: `${modQuests.length ? (done / modQuests.length) * 100 : 0}%`, backgroundColor: mod.color }} />
-                  </div>
-
-                  <h3 className="text-3xl font-display font-black uppercase tracking-tighter mb-1" style={{ color: mod.color }}>
-                    {mod.name}
-                  </h3>
-                  <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-4">{mod.tagline[language]}</p>
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {mod.techs.slice(0, 5).map(t => (
-                      <span key={t} className="text-[9px] font-mono px-2 py-0.5 bg-white/5 text-white/40 uppercase">{t}</span>
-                    ))}
-                  </div>
-                  {/* Mentor avatars */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex -space-x-3">
-                      {modMentors.map(m => (
-                        <img key={m.id} src={m.avatar} alt={m.name}
-                          className="w-9 h-9 object-cover object-top pixel-render border-2 border-black"
-                          style={{ borderColor: mod.color + '44' }} />
+                    
+                    <h3 className="text-5xl font-display font-black uppercase tracking-tighter italic mb-2 leading-none group-hover:text-dg-pink transition-colors">
+                      {mod.name}
+                    </h3>
+                    <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-6 max-w-[220px] leading-relaxed">
+                      {mod.tagline[language]}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      {mod.techs.slice(0, 4).map(t => (
+                        <span key={t} className="text-[9px] font-mono px-2 py-0.5 border border-white/5 bg-white/5 text-white/40 uppercase tracking-widest">
+                          {t}
+                        </span>
                       ))}
                     </div>
-                    <span className="text-white/30 text-[10px] font-mono uppercase">{modMentors.map(m => m.name).join(', ')}</span>
-                    <ChevronRight size={14} className="ml-auto text-white/20 group-hover:text-white group-hover:translate-x-1 transition-all" />
                   </div>
+
+                  <div className="flex items-end justify-between">
+                    <div>
+                      <div className="text-[9px] font-mono text-white/20 uppercase mb-3 tracking-widest">Primary Mentor</div>
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 border-2 border-white/10 overflow-hidden shadow-2xl">
+                          <img src={mainMentor.avatar} alt="" className="w-full h-full object-cover object-top pixel-render" />
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="font-display font-bold text-sm tracking-widest text-white uppercase italic">{mainMentor.name}</span>
+                          <span className="text-dg-pink text-[9px] font-bold uppercase tracking-widest">{done}/{modQuests.length} Quests</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 text-white/20 group-hover:text-dg-pink transition-all">
+                      <div className="text-right">
+                        <div className="text-[9px] font-mono uppercase tracking-widest">ENTER_GATE</div>
+                        <div className="h-px w-full bg-current mt-1 origin-right scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                      </div>
+                      <ChevronRight size={28} className="group-hover:translate-x-2 transition-transform duration-500" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Aesthetic Accents */}
+                <div className="absolute top-0 right-0 p-4 opacity-20 font-mono text-[8px] text-white/40 pointer-events-none select-none">
+                  CRC: {Math.random().toString(16).slice(2, 10).toUpperCase()}
                 </div>
               </motion.div>
             );
@@ -213,6 +238,7 @@ function ModuleSelect({ onSelect }: { onSelect: (m: Module) => void }) {
 function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSelect: (m: Mentor) => void; onBack: () => void }) {
   const { language } = useAuth();
   const mentors = MENTORS.filter(m => mod.mentorIds.includes(m.id));
+  const [hovered, setHovered] = useState<Mentor>(mentors[0]);
 
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 md:px-10">

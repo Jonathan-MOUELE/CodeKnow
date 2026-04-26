@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@400;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "Orbitron", sans-serif;
+  --color-dg-pink: #ff3399;
+  --color-cyber-blue: #00f2ff;
+  --color-cyber-green: #00ff9f;
+  --color-app-bg: #030303;
+  --color-app-surface: #0a0a0a;
+  --color-app-text: #ffffff;
+}
+
+.light {
+  --color-app-bg: #f0f4f8;
+  --color-app-surface: #ffffff;
+  --color-app-text: #1a1a2e;
+  --color-dg-pink: #e11d48;
+}
+
+/* ── Global ─────────────────────────────────────────── */
+@layer base {
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-[var(--color-app-bg)] text-[var(--color-app-text)] overflow-x-hidden;
+    font-family: var(--font-sans);
+  }
+  ::selection { background: #ff3399; color: white; }
+}
+
+/* ── Components ─────────────────────────────────────── */
+@layer components {
+
+  /* CRT overlay */
+  .crt-overlay {
+    @apply fixed inset-0 pointer-events-none z-[999] opacity-15;
+    background:
+      linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.08) 50%),
+      linear-gradient(90deg, rgba(255,0,0,0.02), rgba(0,255,0,0.01), rgba(0,0,255,0.02));
+    background-size: 100% 3px, 3px 100%;
+  }
+
+  /* Sharp RPG box */
+  .sharp-box {
+    @apply relative border border-white/10 bg-black/50 backdrop-blur-xl;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 60px rgba(0,0,0,0.3);
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .sharp-box:hover {
+    @apply border-white/20;
+    box-shadow: 0 0 30px rgba(255,51,153,0.15), 0 0 0 1px rgba(255,51,153,0.3);
+  }
+
+  /* Dialogue box — VN style */
+  .vn-dialogue {
+    @apply fixed bottom-6 left-1/2 -translate-x-1/2 w-[96%] max-w-5xl z-[150];
+    background: rgba(0,0,0,0.96);
+    border-top: 3px solid #ff3399;
+    clip-path: polygon(0 18%, 2% 0, 98% 0, 100% 18%, 100% 100%, 0 100%);
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,51,153,0.1);
+    min-height: 200px;
+  }
+
+  /* Module card */
+  .module-card {
+    @apply relative overflow-hidden border border-white/10 cursor-pointer transition-all duration-500;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+  }
+  .module-card:hover {
+    @apply border-white/30;
+    transform: translateY(-6px) scale(1.01);
+  }
+
+  /* Mentor portrait card */
+  .mentor-card {
+    @apply relative overflow-hidden border-2 border-white/5 cursor-pointer transition-all duration-500;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 15% 100%, 0 85%);
+  }
+  .mentor-card.active {
+    box-shadow: 0 0 40px rgba(255,51,153,0.4);
+  }
+  .mentor-card:hover { filter: brightness(1.15); transform: scale(1.03); }
+
+  /* Pixel-perfect image rendering */
+  .pixel-render { image-rendering: pixelated; }
+
+  /* Character breathing */
+  .animate-breathe {
+    animation: breathe 3.5s ease-in-out infinite;
+    transform-origin: bottom center;
+  }
+
+  /* XP bar shimmer */
+  .xp-bar-fill {
+    background: linear-gradient(90deg, #ff3399, #ff6ed4, #ff3399);
+    background-size: 200%;
+    animation: xp-shimmer 2s linear infinite;
+  }
+  .xp-bar-fill-blue {
+    background: linear-gradient(90deg, #3b82f6, #00f2ff, #3b82f6);
+    background-size: 200%;
+    animation: xp-shimmer 2s linear infinite;
+  }
+
+  /* Login background image slideshow */
+  .bg-slide { animation: bg-crossfade 36s infinite; }
+  .bg-slide:nth-child(2) { animation-delay: -12s; }
+  .bg-slide:nth-child(3) { animation-delay: -24s; }
+}
+
+/* ── Keyframes ───────────────────────────────────────── */
+
+@keyframes breathe {
+  0%, 100% { transform: translateY(0px) scaleX(1); }
+  50% { transform: translateY(-10px) scaleX(1.005); }
+}
+
+@keyframes xp-shimmer {
+  0% { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+
+@keyframes bg-crossfade {
+  0% { opacity: 0; filter: blur(10px) scale(1.1); }
+  5%, 33% { opacity: 0.5; filter: blur(0) scale(1); }
+  38%, 100% { opacity: 0; filter: blur(10px) scale(1.1); }
+}
+
+@keyframes float-particle {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(30px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes glitch-clip {
+  0% { clip-path: polygon(0 0%, 100% 0%, 100% 5%, 0 5%); transform: translateX(-4px); }
+  10% { clip-path: polygon(0 20%, 100% 20%, 100% 25%, 0 25%); transform: translateX(4px); }
+  20% { clip-path: polygon(0 60%, 100% 60%, 100% 62%, 0 62%); transform: translateX(-2px); }
+  30% { clip-path: polygon(0 80%, 100% 80%, 100% 90%, 0 90%); transform: translateX(2px); }
+  40%, 100% { clip-path: none; transform: translateX(0); }
+}
+
+@keyframes scanline-move {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+@keyframes level-up-flash {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,51,153,0); }
+  50% { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,51,153,0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,51,153,0); }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes text-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+  52% { opacity: 0.2; }
+  54% { opacity: 0.9; }
+}
+
+.animate-slide-up { animation: slide-up 0.5s ease forwards; }
+.animate-glitch { animation: glitch-clip 0.4s steps(1) infinite; }
+.animate-text-flicker { animation: text-flicker 4s ease infinite; }
+.animate-gradient { background-size: 200% 200%; animation: gradient-shift 6s ease infinite; }
+
+/* Quest difficulty colors */
+.diff-novice { color: #22c55e; border-color: #22c55e; }
+.diff-adept { color: #00f2ff; border-color: #00f2ff; }
+.diff-expert { color: #ff3399; border-color: #ff3399; box-shadow: 0 0 10px rgba(255,51,153,0.3); }
+.diff-master { color: #ffd700; border-color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.4); }

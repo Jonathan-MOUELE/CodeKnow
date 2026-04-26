@@ -1,0 +1,77 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Stores user advancement, XP, and stats.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "xp": { "type": "integer" },
+        "level": { "type": "integer" },
+        "biography": { "type": "string" },
+        "title": { "type": "string", "description": "Unlocked titles based on achievements" },
+        "lastActive": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "xp", "level"]
+    },
+    "UserMentorSkill": {
+      "title": "User Mentor Progress",
+      "description": "Progress with a specific mentor.",
+      "type": "object",
+      "properties": {
+        "mentorId": { "type": "string" },
+        "level": { "type": "integer" },
+        "xp": { "type": "integer" },
+        "unlockedSkills": { "type": "array", "items": { "type": "string" } }
+      },
+      "required": ["mentorId", "level", "xp"]
+    },
+    "Quest": {
+      "title": "Learning Quest",
+      "description": "A coding challenge or quest.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "mentorId": { "type": "string" },
+        "difficulty": { "type": "string", "enum": ["Novice", "Adept", "Expert", "Master"] },
+        "xpReward": { "type": "integer" },
+        "prompt": { "type": "string", "description": "The coding challenge task" }
+      },
+      "required": ["title", "description", "mentorId", "difficulty", "xpReward"]
+    },
+    "UserQuest": {
+      "title": "User Quest Progress",
+      "description": "Tracks a user's progress on a quest.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "questId": { "type": "string" },
+        "status": { "type": "string", "enum": ["started", "submitted", "completed", "failed"] },
+        "submission": { "type": "string" },
+        "feedback": { "type": "string" },
+        "completedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "questId", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profiles and aggregate stats."
+    },
+    "/users/{userId}/mentors/{mentorId}": {
+      "schema": "UserMentorSkill",
+      "description": "Specific progress with each mentor."
+    },
+    "/quests/{questId}": {
+      "schema": "Quest",
+      "description": "Global quest repository."
+    },
+    "/users/{userId}/quests/{questId}": {
+      "schema": "UserQuest",
+      "description": "User-specific quest completion status and feedback."
+    }
+  }
+}

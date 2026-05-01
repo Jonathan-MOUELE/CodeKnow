@@ -32,7 +32,7 @@ Structure: 1) ANALYSIS: simple analogy of what the code does. 2) CONCRETE EXAMPL
 Determine isCorrect (boolean) and xpReward (10-100 based on quality and correctness).`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash",
+    model: "gemini-3-flash-preview",
     contents: userSubmission,
     config: {
       systemInstruction,

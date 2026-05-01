@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { LogOut, ArrowLeft, Globe, ChevronRight, Lock } from 'lucide-react';
+import { LogOut, ArrowLeft, Globe, ChevronRight, RefreshCw, Zap } from 'lucide-react';
 import { useAuth } from './lib/AuthContext';
 import { StatsBar, ModuleIcon } from './components/UI';
 import { QuestTerminal } from './components/QuestTerminal';
@@ -11,21 +11,34 @@ import { MENTORS, MODULES, INITIAL_QUESTS, Mentor, Quest, Module } from './const
 function LoginBG() {
   return (
     <div className="absolute inset-0 overflow-hidden bg-black">
+      {/* Ambient background mentor silhouette (Symbiosis) - Centered & Subtle */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-[0.04] pointer-events-none select-none overflow-hidden blur-[4px]">
+        <img src={MENTORS[0].avatar} alt="" className="h-[90%] w-auto object-contain transform scale-110 pixel-render" />
+      </div>
+
       {/* Single static image */}
-      <img src="/assets/login_bg1.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 blur-[2px]" />
+      <img src="/assets/login_bg1.png" alt="" className="absolute inset-0 w-full h-full object-cover opacity-20 blur-[2px]" />
+      
+      {/* Background Decorative Text */}
+      <div className="absolute top-[15%] right-[5%] font-display font-black text-white/[0.02] text-[15vw] leading-none select-none pointer-events-none uppercase tracking-tighter">
+        CODEKNOW
+      </div>
+
       {/* Gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black via-black/85 to-transparent" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/50" />
-      {/* Animated grid */}
-      <div className="absolute inset-0 opacity-10"
-        style={{ backgroundImage: 'linear-gradient(rgba(0,242,255,0.3) 1px,transparent 1px),linear-gradient(90deg,rgba(0,242,255,0.3) 1px,transparent 1px)', backgroundSize: '60px 60px' }} />
+      
+      {/* Animated neutral grid */}
+      <div className="absolute inset-0 opacity-[0.05]"
+        style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.1) 1px,transparent 1px)', backgroundSize: '80px 80px' }} />
+      
       {/* Floating particles */}
       {['{}', '/>', '()', '[]', '=>', '&&', '||', '??'].map((sym, i) => (
-        <div key={i} className="absolute font-mono text-dg-pink/20 text-sm select-none pointer-events-none"
+        <div key={i} className="absolute font-mono text-white/10 text-sm select-none pointer-events-none"
           style={{
             left: `${10 + i * 11}%`, bottom: '-10%',
-            animation: `float-particle ${8 + i * 1.5}s linear infinite`,
-            animationDelay: `${i * 1.2}s`
+            animation: `float-particle ${10 + i * 2}s linear infinite`,
+            animationDelay: `${i * 1.5}s`
           }}>{sym}</div>
       ))}
     </div>
@@ -46,79 +59,96 @@ function LoginScreen() {
   const mentors = MENTORS.slice(0, 4);
 
   return (
-    <div className="min-h-screen relative flex items-center overflow-hidden">
+    <div className="min-h-screen relative flex items-center justify-center overflow-hidden py-20">
       <LoginBG />
 
-      {/* Right side: character showcase */}
-      <div className="absolute right-0 bottom-0 h-[90vh] w-[45%] pointer-events-none hidden lg:flex items-end justify-end gap-2 pr-8">
-        {mentors.map((m, i) => (
-          <motion.div key={m.id}
-            initial={{ y: 120 + i * 20, opacity: 0 }}
-            animate={{ y: 0, opacity: [1, 0.8, 0.6, 0.4][i] }}
-            transition={{ delay: 0.1 + i * 0.12, duration: 0.8, type: 'spring', bounce: 0.1 }}
-            className="flex items-end"
-            style={{
-              height: `${60 + i * 8}%`,
-              width: '22%',
-              filter: i === 0 ? 'drop-shadow(0 0 30px rgba(0,242,255,0.3))' : `brightness(${0.9 - i * 0.1})`
-            }}>
-            <CharacterSprite mentor={m} isTalking={false} className="w-full h-full" />
+      {/* Central Content Area */}
+      <div className="relative z-10 w-full max-w-5xl px-8 flex flex-col items-center gap-12">
+        {/* Logo & Intro */}
+        <div className="text-center">
+          <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <h1 className="text-7xl md:text-9xl font-display font-black text-white leading-none tracking-tighter italic animate-text-flicker">
+              CODE<span>KNOW</span>
+            </h1>
+            <div className="h-1 w-48 bg-white/20 mt-4 mb-6 transform -skew-x-12 mx-auto" />
+            <p className="text-sm md:text-base font-bold text-white/40 uppercase tracking-[0.5em] mb-4">
+              {language === 'fr' ? 'ACADÉMIE DE CODE RPG' : 'RPG CODE ACADEMY'}
+            </p>
+            <p className="text-white/50 text-base md:text-lg leading-relaxed max-w-2xl font-medium mx-auto">
+              {language === 'fr'
+                ? 'Apprends à coder à travers des quêtes guidées par des mentors IA. Progresse, monte en grade, deviens développeur.'
+                : 'Learn to code through quests guided by AI mentors. Progress, level up, become a developer.'}
+            </p>
           </motion.div>
-        ))}
-      </div>
+        </div>
 
-      {/* Left side: login panel */}
-      <div className="relative z-10 w-full max-w-xl px-8 md:px-16">
-        {/* Logo */}
-        <motion.div initial={{ opacity: 0, y: -30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-          <h1 className="text-7xl md:text-8xl font-display font-black text-white leading-none tracking-tighter italic animate-text-flicker">
-            CODE<span className="text-dg-pink">KNOW</span>
-          </h1>
-          <div className="h-1 w-40 bg-gradient-to-r from-dg-pink to-cyber-blue mt-3 mb-4 transform -skew-x-12" />
-          <p className="text-sm font-bold text-dg-pink uppercase tracking-[0.4em] mb-2">
-            {language === 'fr' ? 'ACADÉMIE DE CODE RPG' : 'RPG CODE ACADEMY'}
-          </p>
-          <p className="text-white/50 text-base leading-relaxed mb-8 max-w-sm font-medium">
-            {language === 'fr'
-              ? 'Apprends à coder à travers des quêtes guidées par des mentors IA. Progresse, monte en grade, deviens développeur.'
-              : 'Learn to code through quests guided by AI mentors. Progress, level up, become a developer.'}
-          </p>
-        </motion.div>
-
-        {/* Login card */}
-        <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.4 }}>
-          <div className="border border-white/10 bg-black/70 backdrop-blur-xl p-6 space-y-4"
-            style={{ clipPath: 'polygon(0 0,100% 0,100% calc(100% - 16px),calc(100% - 16px) 100%,0 100%)' }}>
-            {/* Module preview tags */}
-            <div className="flex flex-wrap gap-2 mb-2">
-              {MODULES.map(m => (
-                <span key={m.id} className="text-[9px] font-mono font-bold uppercase tracking-widest px-2 py-0.5 border"
-                  style={{ color: m.color, borderColor: m.color + '44' }}>
-                  {m.name}
-                </span>
-              ))}
-            </div>
-
-            {authError && (
-              <div className="text-red-400 text-xs font-mono bg-red-500/10 border border-red-500/20 p-3">
-                ⚠ {authError}
+        {/* Login & Mentors Grid */}
+        <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Login Panel */}
+          <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="lg:col-span-5">
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-8 transform -skew-x-2">
+              <div className="flex flex-wrap gap-2 mb-8">
+                {MODULES.map(m => (
+                  <div key={m.id} className="px-3 py-1 border border-white/10 text-[9px] font-mono text-white/30 uppercase tracking-widest">
+                    {m.id}
+                  </div>
+                ))}
               </div>
-            )}
+              
+              {authError && (
+                <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-mono">
+                  ERROR: {authError}
+                </div>
+              )}
 
-            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}
-              onClick={handleSignIn} disabled={isLoading}
-              className="w-full py-4 bg-white text-black font-display font-bold text-sm uppercase tracking-[0.2em] hover:bg-dg-pink hover:text-white transition-all transform -skew-x-2 shadow-[0_0_30px_rgba(255,255,255,0.1)] cursor-pointer disabled:opacity-50 flex items-center justify-center gap-3">
-              {isLoading
-                ? <><span className="animate-spin inline-block w-4 h-4 border-2 border-black border-t-transparent rounded-full" />
-                    {language === 'fr' ? 'Connexion en cours...' : 'Connecting...'}</>
-                : <>{language === 'fr' ? 'Se connecter avec Google' : 'Sign in with Google'}</>}
-            </motion.button>
+              <button 
+                onClick={handleSignIn}
+                disabled={isLoading}
+                className="w-full py-6 bg-white text-black font-display font-black text-sm md:text-base uppercase tracking-[0.4em] hover:bg-dg-pink hover:text-white transition-all shadow-[0_0_50px_rgba(255,255,255,0.1)] relative group overflow-hidden"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-4">
+                    INITIALIZING... <RefreshCw size={20} className="animate-spin" />
+                  </span>
+                ) : (
+                  language === 'fr' ? 'SE CONNECTER AVEC GOOGLE' : 'SIGN IN WITH GOOGLE'
+                )}
+              </button>
+              
+              <div className="mt-8 flex justify-center">
+                <button onClick={() => setLanguage(language === 'fr' ? 'en' : 'fr')} className="text-[11px] font-mono text-white/30 hover:text-dg-pink transition-colors uppercase tracking-[0.3em]">
+                  {language === 'fr' ? '🌐 Switch to English' : '🌐 Passer au Français'}
+                </button>
+              </div>
+            </div>
+          </motion.div>
 
-            <button onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-              className="w-full flex items-center justify-center gap-2 text-white/30 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-widest cursor-pointer">
-              <Globe size={12} /> {language === 'en' ? 'SWITCH TO FRANÇAIS' : 'SWITCH TO ENGLISH'}
-            </button>
+          {/* Mentors Showcase (Centered/Simplified) */}
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {mentors.map((m, i) => (
+              <motion.div 
+                key={m.id}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                className="relative aspect-[3/4] bg-white/[0.03] border border-white/10 group overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-scanline opacity-10" />
+                <div className="absolute inset-0 flex items-end justify-center pointer-events-none">
+                   <CharacterSprite mentor={m} className="w-full h-full object-contain object-bottom transform group-hover:scale-110 transition-transform duration-700" />
+                </div>
+                <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black via-black/80 to-transparent">
+                  <div className="text-xs font-display font-black text-white uppercase truncate mb-1">{m.name}</div>
+                  <div className="text-[8px] font-mono text-white/30 uppercase tracking-widest">{m.sector}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
+        </div>
+
+        {/* Footer info */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1 }} className="text-center opacity-20">
+          <div className="text-[9px] font-mono uppercase tracking-[1em]">SYSTEM_READY // 0 errors detected</div>
         </motion.div>
       </div>
     </div>
@@ -197,7 +227,6 @@ function ModuleSelect({ onSelect }: { onSelect: (m: Module) => void }) {
                       ))}
                     </div>
 
-                    {/* Progress Bar restored */}
                     <div className="max-w-[200px] h-1 bg-white/5 mb-2 overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
@@ -233,7 +262,6 @@ function ModuleSelect({ onSelect }: { onSelect: (m: Module) => void }) {
                   </div>
                 </div>
 
-                {/* Aesthetic Accents */}
                 <div className="absolute top-0 right-0 p-4 opacity-20 font-mono text-[8px] text-white/40 pointer-events-none select-none">
                   CRC: {Math.random().toString(16).slice(2, 10).toUpperCase()}
                 </div>
@@ -246,7 +274,7 @@ function ModuleSelect({ onSelect }: { onSelect: (m: Module) => void }) {
   );
 }
 
-// ── Mentor Selection (horizontal cards like Seven Guardians) ─
+// ── Mentor Selection ─────────────────────────────────────────
 function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSelect: (m: Mentor) => void; onBack: () => void }) {
   const { language } = useAuth();
   const mentors = MENTORS.filter(m => mod.mentorIds.includes(m.id));
@@ -271,7 +299,6 @@ function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSel
           </p>
         </motion.div>
 
-        {/* Horizontal card layout */}
         <div className={`grid gap-6 ${mentors.length === 1 ? 'max-w-sm mx-auto' : mentors.length === 2 ? 'grid-cols-2 max-w-2xl' : 'grid-cols-3'}`}>
           {mentors.map((mentor, i) => {
             const quests = INITIAL_QUESTS.filter(q => q.mentorId === mentor.id);
@@ -289,7 +316,6 @@ function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSel
                   clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)',
                   borderColor: mentor.color + '33'
                 }}>
-                {/* Full portrait background */}
                 <div className="absolute inset-0">
                   <img
                     src={mentor.avatar}
@@ -297,19 +323,15 @@ function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSel
                     className="w-full h-full object-cover object-top pixel-render group-hover:scale-105 transition-transform duration-700"
                   />
                 </div>
-
-                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
                 <div className="absolute top-0 left-0 right-0 h-1" style={{ background: mentor.color }} />
 
-                {/* Top info */}
                 <div className="absolute top-4 left-4 right-4">
                   <div className="text-[8px] font-mono uppercase tracking-widest font-bold px-2 py-0.5 inline-block" style={{ color: mentor.color, background: mentor.color + '22', border: `1px solid ${mentor.color}44` }}>
                     {mentor.sector}
                   </div>
                 </div>
 
-                {/* Bottom info */}
                 <div className="absolute bottom-0 left-0 right-0 p-5 z-20">
                   <h3 className="text-3xl font-display font-black text-white uppercase tracking-tighter leading-none mb-1 group-hover:text-dg-pink transition-colors">
                     {mentor.name}
@@ -323,18 +345,13 @@ function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSel
                     </motion.div>
                   </div>
                 </div>
-
-                {/* Hover glow */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{ boxShadow: `inset 0 0 60px ${mentor.color}22` }} />
               </motion.div>
             );
           })}
         </div>
-
-        {/* Bottom hint */}
-        <motion.p
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
+        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}
           className="text-center text-white/20 text-[10px] font-mono uppercase tracking-[0.3em] mt-12">
           {language === 'fr' ? '— SÉLECTIONNE UN MENTOR POUR COMMENCER —' : '— SELECT A MENTOR TO START —'}
         </motion.p>
@@ -343,21 +360,22 @@ function MentorSelect({ module: mod, onSelect, onBack }: { module: Module; onSel
   );
 }
 
-
-
-
 // ── Quest Selection ──────────────────────────────────────────
-
 function QuestSelect({ mentor, onSelect, onBack }: { mentor: Mentor; onSelect: (q: Quest) => void; onBack: () => void }) {
   const { userData, language } = useAuth();
   const quests = INITIAL_QUESTS.filter(q => q.mentorId === mentor.id).sort((a, b) => a.order - b.order);
-
   const diffColors: Record<string, string> = { Novice: '#22c55e', Adept: '#00f2ff', Expert: '#ff3399', Master: '#ffd700' };
 
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 md:px-10">
-      <StatsBar />
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen pt-24 pb-16 px-4 md:px-10 relative overflow-hidden">
+      <div className="fixed -right-20 -bottom-20 w-[60%] h-[90%] opacity-[0.05] pointer-events-none select-none z-0">
+        <img src={mentor.sprites?.[1] || mentor.avatar} alt="" className="w-full h-full object-contain object-right-bottom pixel-render" />
+      </div>
+      <div className="fixed -left-10 top-20 w-[30%] h-[50%] opacity-[0.03] pointer-events-none select-none z-0 rotate-12">
+        <img src={mentor.sprites?.[2] || mentor.avatar} alt="" className="w-full h-full object-contain object-left-top pixel-render" />
+      </div>
+
+      <div className="relative z-10 max-w-[90vw] mx-auto">
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-10">
           <button onClick={onBack} className="flex items-center gap-2 text-white/30 hover:text-white transition-colors text-[10px] font-mono uppercase mb-6 group">
             <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" /> {language === 'fr' ? 'RETOUR' : 'BACK'}
@@ -458,7 +476,6 @@ export default function App() {
   const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
-    // Safety timeout: if auth takes > 3s, stop loading to allow manual retry or check state
     const timer = setTimeout(() => setLoading(false), 3500);
     if (!authLoading) setLoading(false);
     return () => clearTimeout(timer);

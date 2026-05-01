@@ -32,7 +32,7 @@ Oubliez les tutoriels ennuyeux. Dans **CodeKnow**, vous progressez comme dans un
 
 ## 🧠 Intégration IA (Google Gemini)
 
-Le cœur de CodeKnow repose sur le modèle **Gemini 3 Flash**. Chaque mentor utilise un "System Prompt" spécifique pour évaluer votre code :
+Le cœur de CodeKnow repose sur l'intégration directe de l'API **Gemini 3 Flash**. Chaque mentor utilise un "System Prompt" spécifique pour évaluer votre code :
 - **Analyse Sémantique** : Compréhension réelle de votre logique.
 - **Conseils de Senior** : Astuces professionnelles pour les entretiens.
 - **Détection de Pièges** : Identification des erreurs courantes de débutants.
@@ -49,7 +49,7 @@ Le cœur de CodeKnow repose sur le modèle **Gemini 3 Flash**. Chaque mentor uti
 
 ### Prérequis
 - [Node.js](https://nodejs.org/) (v18+)
-- Une clé API Google AI Studio ([Obtenir ici](https://aistudio.google.com/))
+- Une clé API Google Gemini ([Obtenir ici](https://aistudio.google.com/))
 
 ### Étapes
 1. **Cloner le projet**
@@ -73,7 +73,7 @@ Le cœur de CodeKnow repose sur le modèle **Gemini 3 Flash**. Chaque mentor uti
    VITE_FIREBASE_MESSAGING_SENDER_ID=votre_sender_id
    VITE_FIREBASE_APP_ID=votre_app_id
    
-   # Note: Le SDK Gemini côté client nécessite la clé API (Utilisez .env pour le dev local)
+   # Clé API Gemini (Requis pour le moteur de mentors)
    GEMINI_API_KEY=votre_cle_gemini
    ```
 
@@ -86,5 +86,4 @@ Le cœur de CodeKnow repose sur le modèle **Gemini 3 Flash**. Chaque mentor uti
 
 <div align="center">
   <p>Développé avec ❤️ pour les futurs Gardiens du Code.</p>
-  <a href="https://ai.studio/apps/d8d2546b-83b7-4304-b08f-8cb69fae092c">Voir l'application sur AI Studio</a>
 </div>

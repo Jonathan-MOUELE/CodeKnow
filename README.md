@@ -1,20 +1,90 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<img width="1200" height="475" alt="CodeKnow Banner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+
+# ⚡ CODEKNOW: RPG CODE ACADEMY ⚡
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Powered by Gemini](https://img.shields.io/badge/Powered%20by-Google%20Gemini-blue.svg)](https://deepmind.google/technologies/gemini/)
+[![Framework: React](https://img.shields.io/badge/Framework-React-61dafb.svg)](https://reactjs.org/)
+
+**CodeKnow** est une plateforme d'apprentissage du code immersive, conçue comme un RPG Cyberpunk. Apprenez le développement web, le backend, les bases de données et la cybersécurité à travers des quêtes interactives guidées par des mentors IA ultra-spécialisés.
+
 </div>
 
-# Run and deploy your AI Studio app
+---
 
-This contains everything you need to run your app locally.
+## 🚀 Concept Immersif
 
-View your app in AI Studio: https://ai.studio/apps/d8d2546b-83b7-4304-b08f-8cb69fae092c
+Oubliez les tutoriels ennuyeux. Dans **CodeKnow**, vous progressez comme dans un jeu vidéo :
+- **Quêtes Interactives** : Relevez des défis de code réels.
+- **Mentors IA** : Chaque langage est gardé par un mentor unique (Rin, Tess, Sora, Kael, Lina, Eva, Nova) avec sa propre personnalité.
+- **Feedback Temps Réel** : Vos soumissions sont analysées instantanément par **Google Gemini** pour un retour pédagogique précis.
+- **Système de Progression** : Gagnez de l'XP, montez en grade et synchronisez vos succès via Firebase.
 
-## Run Locally
+## 🛠️ Modules de Formation
 
-**Prerequisites:**  Node.js
+| Module | Spécialités | Mentors |
+| :--- | :--- | :--- |
+| **FRONTEND** | React, Next.js, Tailwind, HTML/CSS | Rin |
+| **BACKEND** | Python, Flask, PHP, Symfony, C#, C++ | Tess, Sora, Kael |
+| **DATABASE** | SQL, Architecture BDD, Optimisation | Lina |
+| **AI & CYBER** | TypeScript, Sécurité, Prompting, Three.js | Eva, Nova |
 
+## 🧠 Intégration IA (Google Gemini)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Le cœur de CodeKnow repose sur le modèle **Gemini 3 Flash**. Chaque mentor utilise un "System Prompt" spécifique pour évaluer votre code :
+- **Analyse Sémantique** : Compréhension réelle de votre logique.
+- **Conseils de Senior** : Astuces professionnelles pour les entretiens.
+- **Détection de Pièges** : Identification des erreurs courantes de débutants.
+- **RPG Framing** : Chaque retour est écrit dans le style et la personnalité du mentor choisi.
+
+## 💻 Stack Technique
+
+- **Frontend** : React 18, Vite, TypeScript, Tailwind CSS, Motion (Framer).
+- **IA** : Google Generative AI (Gemini SDK).
+- **Backend/Auth** : Firebase (Authentication & Firestore).
+- **UI/UX** : Design Cyberpunk/CRT avec effets de scanlines et animations fluides.
+
+## ⚙️ Installation Locale
+
+### Prérequis
+- [Node.js](https://nodejs.org/) (v18+)
+- Une clé API Google AI Studio ([Obtenir ici](https://aistudio.google.com/))
+
+### Étapes
+1. **Cloner le projet**
+   ```bash
+   git clone https://github.com/Jonathan-MOUELE/CodeKnow.git
+   cd CodeKnow
+   ```
+
+2. **Installer les dépendances**
+   ```bash
+   npm install
+   ```
+
+3. **Configuration de l'environnement**
+   Créez un fichier `.env.local` à la racine :
+   ```env
+   VITE_FIREBASE_API_KEY=votre_cle
+   VITE_FIREBASE_AUTH_DOMAIN=votre_domaine
+   VITE_FIREBASE_PROJECT_ID=votre_id
+   VITE_FIREBASE_STORAGE_BUCKET=votre_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=votre_sender_id
+   VITE_FIREBASE_APP_ID=votre_app_id
+   
+   # Note: Le SDK Gemini côté client nécessite la clé API (Utilisez .env pour le dev local)
+   GEMINI_API_KEY=votre_cle_gemini
+   ```
+
+4. **Lancer le serveur de développement**
+   ```bash
+   npm run dev
+   ```
+
+---
+
+<div align="center">
+  <p>Développé avec ❤️ pour les futurs Gardiens du Code.</p>
+  <a href="https://ai.studio/apps/d8d2546b-83b7-4304-b08f-8cb69fae092c">Voir l'application sur AI Studio</a>
+</div>
